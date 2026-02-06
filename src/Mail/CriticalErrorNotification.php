@@ -4,62 +4,57 @@ namespace Tishmalo\EscalationMatrix\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class CriticalErrorNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $errorData;
+    public $contact;
+    public $priority;
+
     /**
      * Create a new message instance.
      */
-    public function __construct(
-        public array $errorData,
-        public array $contact,
-        public string $priority
-    ) {
+    public function __construct(array $errorData, array $contact, string $priority)
+    {
+        $this->errorData = $errorData;
+        $this->contact = $contact;
+        $this->priority = $priority;
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
+     *
+     * @return $this
      */
-    public function envelope(): Envelope
+    public function build()
     {
-        $priorityEmoji = match ($this->priority) {
+        $priorityEmoji = $this->getPriorityEmoji($this->priority);
+        $subject = "{$priorityEmoji} [{$this->errorData['priority_label']}] {$this->errorData['exception']['type_short']}";
+
+        return $this->subject($subject)
+                    ->view('escalation-matrix::emails.error-notification')
+                    ->with([
+                        'errorData' => $this->errorData,
+                        'contact' => $this->contact,
+                        'priority' => $this->priority,
+                    ]);
+    }
+
+    /**
+     * Get emoji for priority level
+     */
+    private function getPriorityEmoji(string $priority): string
+    {
+        $emojis = [
             'critical' => '🚨',
             'high' => '⚠️',
             'medium' => 'ℹ️',
             'low' => '📝',
-            default => '⚠️',
-        };
+        ];
 
-        // Use array access for errorData as passed from service
-        $subject = "{$priorityEmoji} [{$this->errorData['priority_label']}] {$this->errorData['exception']['type_short']}";
-
-        return new Envelope(
-            subject: $subject,
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'escalation-matrix::emails.error-notification',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $emojis[$priority] ?? '⚠️';
     }
 }
