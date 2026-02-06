@@ -16,6 +16,15 @@ interface SupportTicketDriver
     public function createTicket(string $subject, string $description, string $priority, array $errorData): ?string;
 
     /**
+     * Update the status of a ticket.
+     *
+     * @param string|int $ticketId
+     * @param string $status
+     * @return bool
+     */
+    public function updateTicketStatus($ticketId, string $status): bool;
+
+    /**
      * Get the system user responsible for creating tickets.
      *
      * @return object|null

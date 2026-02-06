@@ -35,6 +35,31 @@ class LocalTicketDriver implements SupportTicketDriver
     }
 
     /**
+     * Update the status of a ticket.
+     *
+     * @param string|int $ticketId
+     * @param string $status
+     * @return bool
+     */
+    public function updateTicketStatus($ticketId, string $status): bool
+    {
+        try {
+            $ticket = PackageTicket::find($ticketId);
+
+            if (!$ticket) {
+                \Log::warning("Ticket not found: {$ticketId}");
+                return false;
+            }
+
+            $ticket->status = $status;
+            return $ticket->save();
+        } catch (\Exception $e) {
+            \Log::error('Failed to update ticket status: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Get the system user responsible for creating tickets.
      *
      * @return object|null
