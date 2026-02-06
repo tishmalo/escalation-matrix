@@ -3,6 +3,8 @@
 namespace Tishmalo\EscalationMatrix;
 
 use Illuminate\Support\ServiceProvider;
+use Tishmalo\EscalationMatrix\Contracts\SupportTicketDriver;
+use Tishmalo\EscalationMatrix\Drivers\LocalTicketDriver;
 use Tishmalo\EscalationMatrix\Services\EscalationService;
 use Tishmalo\EscalationMatrix\Services\SmsService;
 
@@ -18,6 +20,11 @@ class EscalationServiceProvider extends ServiceProvider
             __DIR__ . '/../config/escalation.php', 'escalation'
         );
 
+        // Register default LocalTicketDriver if no custom driver is bound
+        $this->app->bind(SupportTicketDriver::class, function ($app) {
+            return new LocalTicketDriver();
+        });
+
         // Register default SmsService
         $this->app->singleton(SmsService::class, function ($app) {
             return new SmsService();
@@ -26,7 +33,7 @@ class EscalationServiceProvider extends ServiceProvider
         // Register EscalationService
         $this->app->singleton(EscalationService::class, function ($app) {
             return new EscalationService(
-                $app->make(\Tishmalo\EscalationMatrix\Contracts\SupportTicketDriver::class),
+                $app->make(SupportTicketDriver::class),
                 $app->make(SmsService::class)
             );
         });

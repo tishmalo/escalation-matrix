@@ -26,32 +26,37 @@ composer require tishmalo/escalation-matrix
     php artisan vendor:publish --tag=escalation-config
     ```
 
-2.  **Run Migrations (Optional):**
-    If you plan to use the internal ticket system:
+2.  **Run Migrations:**
+    The package uses a local database ticket system by default. Run migrations to create the required table:
     ```bash
     php artisan migrate
     ```
 
-3.  **Implement Support Driver:**
-    Create a class that implements `Tishmalo\EscalationMatrix\Contracts\SupportTicketDriver`.
+3.  **Configure Escalation Matrix:**
+    Edit `config/escalation.php` to set up your notification contacts, priorities, and channels.
 
+### Custom Support Ticket Driver (Optional)
+
+By default, the package uses `LocalTicketDriver` which stores tickets in your database. To integrate with an external ticketing system:
+
+1.  **Implement the Driver Interface:**
     ```php
     // app/Services/MyTicketDriver.php
     use Tishmalo\EscalationMatrix\Contracts\SupportTicketDriver;
 
     class MyTicketDriver implements SupportTicketDriver {
         public function createTicket($subject, $description, $priority, $errorData): ?string {
-            // Your logic here
+            // Your integration logic (e.g., Zendesk, Jira, etc.)
             return 'TICKET-123';
         }
-        
+
         public function getSystemUser(): ?object {
              return null;
         }
     }
     ```
 
-4.  **Bind the Driver:**
+2.  **Bind Your Custom Driver:**
     In your `AppServiceProvider`:
     ```php
     $this->app->bind(
