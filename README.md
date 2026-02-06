@@ -80,6 +80,21 @@ try {
 }
 ```
 
+### Viewing and Managing Tickets
+
+Access the ticket management interface at `/tickets` to:
+- View all tickets with their priorities and statuses
+- Click on individual tickets to see full details
+- Change ticket status via dropdown (Open, In Progress, Resolved, Closed)
+
+### Updating the Package
+
+When updating the package, if you have previously published the views, republish them to get the latest updates:
+
+```bash
+php artisan vendor:publish --tag=escalation-views --force
+```
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
