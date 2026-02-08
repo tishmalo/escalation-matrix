@@ -67,16 +67,46 @@ By default, the package uses `LocalTicketDriver` which stores tickets in your da
 
 ## Usage
 
-The package automatically listens for exceptions if you integrate it into your Exception Handler (`bootstrap/app.php` or `App\Exceptions\Handler.php`).
+### Integrate with Exception Handler
 
-**Manual Trigger:**
+Add the escalation service to your exception handler. The package will automatically capture and process exceptions.
+
+**Option 1: Using Facade (Recommended)**
+```php
+// app/Exceptions/Handler.php or your NotificationTrait
+
+use Tishmalo\EscalationMatrix\Facades\Escalation;
+
+public function report(Throwable $exception)
+{
+    parent::report($exception);
+
+    // Send to escalation matrix
+    Escalation::handle($exception);
+}
+```
+
+**Option 2: Using Service Container**
 ```php
 use Tishmalo\EscalationMatrix\Services\EscalationService;
 
+public function report(Throwable $exception)
+{
+    parent::report($exception);
+
+    app(EscalationService::class)->handle($exception);
+}
+```
+
+**Option 3: Manual Trigger**
+```php
+use Tishmalo\EscalationMatrix\Facades\Escalation;
+
 try {
-    // ... code
+    // ... your code
 } catch (\Throwable $e) {
-    app(EscalationService::class)->handle($e);
+    Escalation::handle($e);
+    throw $e; // Re-throw if needed
 }
 ```
 
