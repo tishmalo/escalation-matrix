@@ -67,38 +67,28 @@ By default, the package uses `LocalTicketDriver` which stores tickets in your da
 
 ## Usage
 
-### Integrate with Exception Handler
+### ✨ Automatic Exception Capture (Zero Configuration Required)
 
-Add the escalation service to your exception handler. The package will automatically capture and process exceptions.
+**The package works automatically!** Once installed and configured, it will capture and process ALL exceptions without any code changes.
 
-**Option 1: Using Facade (Recommended)**
-```php
-// app/Exceptions/Handler.php or your NotificationTrait
+The package automatically registers with Laravel's exception handler using the `reportable()` method and processes exceptions based on your `config/escalation.php` settings.
 
-use Tishmalo\EscalationMatrix\Facades\Escalation;
-
-public function report(Throwable $exception)
-{
-    parent::report($exception);
-
-    // Send to escalation matrix
-    Escalation::handle($exception);
-}
+**To disable automatic reporting:**
+```env
+# In your .env file
+ERROR_AUTO_REPORT=false
 ```
 
-**Option 2: Using Service Container**
+Or in `config/escalation.php`:
 ```php
-use Tishmalo\EscalationMatrix\Services\EscalationService;
-
-public function report(Throwable $exception)
-{
-    parent::report($exception);
-
-    app(EscalationService::class)->handle($exception);
-}
+'auto_report' => false,
 ```
 
-**Option 3: Manual Trigger**
+### Manual Integration (Optional)
+
+If you prefer manual control or disabled auto-reporting, you can manually trigger the escalation:
+
+**Using Facade:**
 ```php
 use Tishmalo\EscalationMatrix\Facades\Escalation;
 
@@ -108,6 +98,11 @@ try {
     Escalation::handle($e);
     throw $e; // Re-throw if needed
 }
+```
+
+**Using Service Container:**
+```php
+app(\Tishmalo\EscalationMatrix\Services\EscalationService::class)->handle($exception);
 ```
 
 ### Viewing and Managing Tickets

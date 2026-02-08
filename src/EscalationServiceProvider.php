@@ -62,5 +62,36 @@ class EscalationServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/escalation-matrix'),
         ], 'escalation-views');
+
+        // Register automatic exception handling
+        $this->registerExceptionHandler();
+    }
+
+    /**
+     * Register automatic exception handling with Laravel's exception handler
+     */
+    protected function registerExceptionHandler(): void
+    {
+        if (!config('escalation.auto_report', true)) {
+            return;
+        }
+
+        $this->app->booted(function () {
+            $handler = $this->app->make(\Illuminate\Contracts\Debug\ExceptionHandler::class);
+
+            if (method_exists($handler, 'reportable')) {
+                $handler->reportable(function (\Throwable $e) {
+                    try {
+                        app(EscalationService::class)->handle($e);
+                    } catch (\Throwable $escalationException) {
+                        // Silently fail to prevent breaking the app
+                        \Log::error('Escalation Matrix failed to handle exception', [
+                            'original_exception' => $e->getMessage(),
+                            'escalation_error' => $escalationException->getMessage(),
+                        ]);
+                    }
+                });
+            }
+        });
     }
 }

@@ -11,6 +11,7 @@ return [
     */
 
     'enabled' => env('ERROR_NOTIFICATION_ENABLED', true),
+    'auto_report' => env('ERROR_AUTO_REPORT', true), // Automatically capture all exceptions
     'ticket_enabled' => env('ERROR_TICKET_ENABLED', true),
     'sms_enabled' => env('ERROR_SMS_ENABLED', true), // Added strictly optional switch
 
