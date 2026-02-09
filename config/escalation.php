@@ -17,6 +17,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Ticket Access Authentication
+    |--------------------------------------------------------------------------
+    |
+    | Configure authentication for the /tickets interface
+    |
+    | Strategy 1 (Laravel Auth): If your app has authentication, the package
+    | will check if logged-in users are in allowed_emails or have allowed_roles
+    |
+    | Strategy 2 (Password): If no Laravel auth, users must enter password
+    | Run: php artisan escalation:set-password to generate the hash
+    |
+    */
+
+    'tickets_auth' => [
+        'enabled' => env('ESCALATION_AUTH_ENABLED', true),
+        'password_hash' => env('ESCALATION_PASSWORD_HASH'),
+        'allowed_emails' => array_filter(explode(',', env('ESCALATION_ALLOWED_EMAILS', ''))),
+        'allowed_roles' => array_filter(explode(',', env('ESCALATION_ALLOWED_ROLES', 'admin'))),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Escalation Matrix
     |--------------------------------------------------------------------------
     |

@@ -35,6 +35,68 @@ composer require tishmalo/escalation-matrix
 3.  **Configure Escalation Matrix:**
     Edit `config/escalation.php` to set up your notification contacts, priorities, and channels.
 
+4.  **Setup Ticket Authentication (Important!):**
+    The `/tickets` interface is protected and requires authentication. Choose one of the methods below:
+
+### Ticket Authentication Setup
+
+#### Option 1: For Apps WITH Laravel Authentication (Recommended)
+
+If your application has user authentication (Breeze, Jetstream, Sanctum, etc.), configure allowed users:
+
+```env
+ESCALATION_AUTH_ENABLED=true
+ESCALATION_ALLOWED_EMAILS=admin@company.com,dev@company.com,support@company.com
+```
+
+Or use roles (works with Spatie Permission, Laravel's built-in roles, etc.):
+
+```env
+ESCALATION_AUTH_ENABLED=true
+ESCALATION_ALLOWED_ROLES=admin,developer,support
+```
+
+**How it works:**
+- Users must log in to your application first
+- Package checks if the logged-in user's email is in allowed list OR has an allowed role
+- No additional login required - uses your app's existing authentication
+
+#### Option 2: For Apps WITHOUT Authentication (Password-Based)
+
+If your application doesn't have authentication, set up a password:
+
+```bash
+php artisan escalation:set-password
+```
+
+This command will:
+1. Prompt you to enter a password (min 8 characters)
+2. Generate a bcrypt hash
+3. Show you what to add to your `.env` file
+
+Add the generated hash to `.env`:
+
+```env
+ESCALATION_AUTH_ENABLED=true
+ESCALATION_PASSWORD_HASH="$2y$10$abc...xyz"
+```
+
+**How it works:**
+- Users visit `/tickets` and see a login form
+- They enter the password you set
+- Session-based authentication (login once per browser session)
+- To change password, run `php artisan escalation:set-password` again
+
+#### Disable Authentication (Not Recommended for Production)
+
+To disable authentication (only for local development):
+
+```env
+ESCALATION_AUTH_ENABLED=false
+```
+
+**⚠️ Warning:** This exposes sensitive error data (stack traces, user info, IPs) to anyone who can access your application.
+
 ### Custom Support Ticket Driver (Optional)
 
 By default, the package uses `LocalTicketDriver` which stores tickets in your database. To integrate with an external ticketing system:

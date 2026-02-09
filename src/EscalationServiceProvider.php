@@ -3,6 +3,7 @@
 namespace Tishmalo\EscalationMatrix;
 
 use Illuminate\Support\ServiceProvider;
+use Tishmalo\EscalationMatrix\Console\Commands\SetTicketPassword;
 use Tishmalo\EscalationMatrix\Contracts\SupportTicketDriver;
 use Tishmalo\EscalationMatrix\Drivers\LocalTicketDriver;
 use Tishmalo\EscalationMatrix\Services\EscalationService;
@@ -62,6 +63,13 @@ class EscalationServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/escalation-matrix'),
         ], 'escalation-views');
+
+        // Register console commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                SetTicketPassword::class,
+            ]);
+        }
 
         // Register automatic exception handling
         $this->registerExceptionHandler();

@@ -10,7 +10,18 @@
     <div class="max-w-6xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Support Tickets</h1>
-            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">External Module</span>
+            <div class="flex items-center gap-3">
+                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Escalation Matrix</span>
+                <form method="POST" action="{{ route('escalation.logout') }}">
+                    @csrf
+                    <button type="submit" class="text-sm text-gray-600 hover:text-red-600 font-medium">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Logout
+                    </button>
+                </form>
+            </div>
         </div>
 
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
