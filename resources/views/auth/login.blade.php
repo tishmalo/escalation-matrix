@@ -10,15 +10,14 @@
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="max-w-md w-full">
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-red-500 to-orange-500 px-6 py-8 text-center">
-                <svg class="w-16 h-16 mx-auto text-white mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                </svg>
-                <h1 class="text-2xl font-bold text-white">Escalation Tickets</h1>
-                <p class="text-red-100 mt-2">Secure Access Required</p>
-            </div>
-
-            <div class="px-6 py-8">
+            <div class="px-6 py-8 border-b border-gray-200">
+                <div class="text-center mb-6">
+                    <svg class="w-12 h-12 mx-auto text-gray-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    <h1 class="text-2xl font-bold text-gray-800">Escalation Tickets</h1>
+                    <p class="text-gray-600 text-sm mt-1">Enter password to access</p>
+                </div>
                 @if($errors->any())
                     <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
                         <ul class="list-disc list-inside">
@@ -46,7 +45,7 @@
                             type="password"
                             name="password"
                             id="password"
-                            class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                            class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                             placeholder="Enter password"
                             required
                             autofocus
@@ -55,12 +54,12 @@
 
                     <button
                         type="submit"
-                        class="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150"
+                        class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150"
                     >
                         <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                         </svg>
-                        Access Tickets
+                        Login
                     </button>
                 </form>
 
